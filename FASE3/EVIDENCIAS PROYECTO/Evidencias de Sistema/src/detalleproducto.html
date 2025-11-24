@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalle Producto</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar superior-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-2">
+  <a class="navbar-brand fw-bold" href="/">Dalmacia</a>
+
+  <form class="d-flex mx-3 flex-grow-1" role="search">
+    <input class="form-control me-2" type="search" placeholder="Buscar">
+    <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+  </form>
+
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav ms-auto">
+      <div id="user-info"></div>
+    </ul>
+  </div>
+</nav>
+
+<!-- Navbar inferior -->
+<nav class="bg-light border-top border-bottom py-2">
+  <div class="container d-flex gap-4">
+    <a href="/" class="text-dark text-decoration-none">Home</a>
+    <a href="/catalogo" class="text-dark text-decoration-none">Catalogo</a>
+    <div class="dropdown">
+      <a class="text-dark text-decoration-none dropdown-toggle" href="#" role="button" id="dropdownCategorias" data-bs-toggle="dropdown" aria-expanded="false">
+        Categorías
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+        <li><a class="dropdown-item" href="#" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Construccion">Construcción</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Jardineria">Jardinería</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Fontaneria">Fontanería</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Seguridad">Seguridad</a></li>
+      </ul>
+    </div>
+    <a href="#" class="text-dark text-decoration-none">Sobre Nosotros</a>
+  </div>
+</nav>
+
+<div class="container my-5">
+  <div class="row align-items-start">
+    <!-- Imagen del producto -->
+    <div class="col-md-6 text-center">
+      <img id="producto-imagen" src="" alt="Imagen del producto" class="img-fluid shadow-sm product-image">
+    </div>
+
+    <!-- Información del producto -->
+    <div class="col-md-6">
+      <h2 class="fw-bold mb-2" id="producto-nombre"></h2>
+
+      <p class="price mt-3">
+        <span class="fw-bold text-primary fs-3"><span id="producto-precio"></span></span>
+      </p>
+
+      <p class="stock">Stock disponible: <strong id="producto-stock"></strong></p>
+
+      <div class="d-flex flex-column gap-2">
+        <button class="btn btn-primary btn-lg w-100" id="agregar-carrito">
+          <i class="bi bi-cart-plus"></i> AGREGAR AL CARRITO
+        </button>
+        <a href="/catalogo" class="btn btn-dark btn-lg w-100">VOLVER AL CATÁLOGO</a>
+      </div>
+
+      <hr class="my-4">
+
+      <div class="descripcion">
+        <h4 class="fw-semibold mb-2">Descripción del producto</h4>
+        <p id="producto-descripcion"></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-light pt-4 pb-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <h5>Dalmacia</h5>
+      </div>
+      <div class="col-md-2 mb-3">
+        <h6>Enlaces</h6>
+        <ul class="list-unstyled">
+          <li><a href="/" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="/catalogo" class="text-light text-decoration-none">Catalogo</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Sobre nosotros</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-3">
+        <h6>Categorias</h6>
+        <ul class="list-unstyled">
+          <li><a class="dropdown-item" href="#" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Construccion">Construcción</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Jardineria">Jardinería</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Fontaneria">Fontanería</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Seguridad">Seguridad</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-3">
+        <h6>Contactanos</h6>
+        <div>
+          <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+    <hr class="bg-light">
+    <div class="text-end small">&copy; 2025 Dalmacia. Todos los derechos reservados.</div>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [key, value] = cookie.trim().split('=');
+    if (key === name) return decodeURIComponent(value);
+  }
+  return null;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const usuario = getCookie('nombre_usuario');
+  const userInfo = document.getElementById('user-info');
+
+  if (usuario) {
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center gap-3 w-100">
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-white">Hola, ${usuario}</span>
+          <a class="btn btn-sm btn-outline-light" href="/logout">Salir</a>
+        </div>
+        <div class="position-relative ms-auto">
+          <a id="carrito-btn" class="text-white text-decoration-none d-flex align-items-center" href="#">
+            <i class="bi bi-cart me-1"></i> Carrito
+          </a>
+          <span class="cart-badge d-none">0</span>
+        </div>
+      </div>
+    `;
+
+    const carritoBtn = document.getElementById('carrito-btn');
+    const badge = document.querySelector('.cart-badge');
+
+    const popover = new bootstrap.Popover(carritoBtn, {
+      html: true,
+      content: '<div class="text-center text-muted py-2">Cargando carrito...</div>',
+      placement: 'bottom',
+      sanitize: false,
+      trigger: 'manual'
+    });
+
+    carritoBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await cargarCarrito(true);
+    });
+
+    async function cargarCarrito(mostrar = false) {
+      try {
+        const response = await fetch('/carrito', { credentials: 'include' });
+        if (response.status === 401) return window.location.href = '/login';
+
+        const data = await response.json();
+        const productos = data.carrito || [];
+
+        if (productos.length === 0) {
+          actualizarPopover('<div class="text-center text-muted py-2">Tu carrito está vacío</div>');
+          badge.classList.add('d-none');
+          if (mostrar) popover.show();
+          return;
+        }
+
+        let contenido = `<div class="list-group small" style="max-width:300px;">`;
+        let total = 0;
+
+        productos.forEach(item => {
+          total += Number(item.subtotal);
+          contenido += `
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div class="text-truncate" style="max-width:150px;">
+                ${item.nom_producto}<br>
+                <small class="text-muted">x${item.cantidad}</small>
+                <div class="mt-1">
+                  <button class="btn btn-sm btn-outline-secondary btn-minus" data-id="${item.id_producto}" data-cantidad="${item.cantidad}">-</button>
+                  <button class="btn btn-sm btn-outline-secondary btn-plus" data-id="${item.id_producto}" data-cantidad="${item.cantidad}">+</button>
+                </div>
+              </div>
+              <span class="fw-semibold">${Number(item.subtotal).toLocaleString("es-CL", { style: "currency", currency: "CLP" })}</span>
+            </div>
+          `;
+        });
+
+        contenido += `
+          <div class="list-group-item text-end fw-bold border-top">
+            Total: ${total.toLocaleString("es-CL", { style: "currency", currency: "CLP" })}
+          </div>
+          <div class="text-center mt-2">
+            <button id="vaciar-carrito" class="btn btn-sm btn-danger mb-1">Vaciar carrito</button>
+            <a href="/checkout" class="btn btn-sm btn-success">Ir a pagar</a>
+          </div>
+        </div>`;
+
+        actualizarPopover(contenido);
+
+        badge.textContent = productos.reduce((sum, p) => sum + Number(p.cantidad), 0);
+        badge.classList.remove('d-none');
+
+        if (mostrar) popover.show();
+
+        // Eventos aumentar/disminuir productos
+        document.querySelectorAll('.btn-plus').forEach(btn => {
+          btn.addEventListener('click', () => modificarCantidad(btn.dataset.id, 1));
+        });
+
+        document.querySelectorAll('.btn-minus').forEach(btn => {
+          btn.addEventListener('click', () => modificarCantidad(btn.dataset.id, -1));
+        });
+
+        // Evento vaciar carrito
+        const vaciarBtn = document.getElementById('vaciar-carrito');
+        if (vaciarBtn) vaciarBtn.addEventListener('click', vaciarCarrito);
+
+      } catch (error) {
+        console.error('Error al cargar el carrito:', error);
+        actualizarPopover('<div class="text-danger text-center py-2">Error al cargar el carrito.</div>');
+        if (mostrar) popover.show();
+      }
+    }
+
+    function actualizarPopover(contenido) {
+      const instancia = bootstrap.Popover.getInstance(carritoBtn);
+      if (!instancia) return;
+
+      if (typeof instancia.setContent === 'function') {
+        instancia.setContent({ '.popover-body': contenido });
+      } else {
+        const tip = instancia.getTipElement();
+        if (tip && tip.querySelector('.popover-body')) {
+          tip.querySelector('.popover-body').innerHTML = contenido;
+        }
+      }
+    }
+
+    async function modificarCantidad(id_producto, cantidad) {
+      const res = await fetch('/carrito/modificar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ id_producto, cantidad })
+      });
+      const data = await res.json();
+      if (!data.success) console.error(data.message);
+      cargarCarrito(true);
+    }
+
+    async function vaciarCarrito() {
+      const res = await fetch('/carrito/vaciar', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (!data.success) console.error(data.message);
+      cargarCarrito(true);
+    }
+
+    window.cargarCarrito = () => cargarCarrito(false);
+    cargarCarrito(false);
+
+  } else {
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center gap-3 w-100">
+        <div class="d-flex align-items-center gap-2">
+          <a class="text-white text-decoration-none d-flex align-items-center" href="/login">
+            <i class="bi bi-person me-1"></i> Iniciar sesión
+          </a>
+        </div>
+        <div class="position-relative ms-auto">
+          <a class="text-white text-decoration-none d-flex align-items-center" href="/login">
+            <i class="bi bi-cart me-1"></i> Carrito
+          </a>
+          <span class="cart-badge d-none">0</span>
+        </div>
+      </div>
+    `;
+  }
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const productoId = urlParams.get('id');
+  if (!productoId) {
+    alert('ID de producto no proporcionado');
+    window.location.href = '/';
+    return;
+  }
+
+  fetch(`/producto/${productoId}`, { credentials: 'include' })
+    .then(async response => {
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'Error al obtener el producto');
+      }
+      return response.json();
+    })
+    .then(producto => {
+      document.getElementById("producto-imagen").src = producto.imagen;
+      document.getElementById("producto-nombre").textContent = producto.nom_producto;
+      document.getElementById("producto-descripcion").textContent = producto.descripcion;
+
+      // Precio a presos chilenos (CLP)
+      const precioCLP = producto.precio.toLocaleString("es-CL", { style: "currency", currency: "CLP" });
+      document.getElementById("producto-precio").textContent = precioCLP;
+
+      document.getElementById("producto-stock").textContent = producto.stock;
+      document.getElementById("agregar-carrito").dataset.id = producto.id_producto;
+    })
+    .catch(error => console.error('Error al obtener el producto:', error));
+});
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const agregarBtn = document.getElementById('agregar-carrito');
+  if (!agregarBtn) return;
+
+  agregarBtn.addEventListener('click', async () => {
+    const productoId = agregarBtn.dataset.id;
+    if (!productoId) return alert('Producto no válido');
+
+    try {
+      const resp = await fetch('/carrito/agregar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ id_producto: productoId, cantidad: 1 })
+      });
+
+      const data = await resp.json();
+      if (data.success) {
+        alert('Producto agregado al carrito');
+        if (window.cargarCarrito) window.cargarCarrito();
+      } else {
+        alert('Error: ' + data.message);
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error al agregar al carrito');
+    }
+  });
+});
+</script>
+<script>
+// Seleccionamos todos los items del dropdown
+document.querySelectorAll('.dropdown-item[data-categoria]').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.preventDefault(); // Evitar navegación normal
+
+    const categoria = item.getAttribute('data-categoria');
+
+    // Construimos la URL del catálogo con el parámetro de categoría
+    const url = new URL(window.location.origin + '/catalogo');
+    url.searchParams.set('categoria', categoria);
+
+    // Redirigimos a esa URL
+    window.location.href = url.toString();
+  });
+});
+</script>
+
+</body>
+</html>

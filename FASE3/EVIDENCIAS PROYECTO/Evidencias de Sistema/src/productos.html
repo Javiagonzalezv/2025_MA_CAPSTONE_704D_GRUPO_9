@@ -1,0 +1,521 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Productos</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="/styles.css">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+</head>
+<body>
+<!-- Navbar superior-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-2 shadow-sm">
+  <a class="navbar-brand fw-bold" href="#">Dalmacia</a>
+
+  <form id="form-busqueda-admin" class="d-flex mx-3 flex-grow-1" role="search" method="GET" action="/productos">
+    <input id="input-busqueda-admin" name="q" class="form-control me-2" type="search" placeholder="Buscar producto...">
+    <button class="btn btn-outline-warning" type="submit"><i class="bi bi-search"></i></button>
+  </form>
+
+  <div id="user-info"></div>
+</nav>
+
+<!-- Navbar inferior -->
+<nav class="bg-light border-top border-bottom py-2">
+  <div class="container d-flex gap-4">
+    <a href="/administracion" class="text-dark text-decoration-none">Home</a>
+    <a href="/productos" class="text-dark text-decoration-none fw-bold border-bottom border-3 border-primary">Productos</a>
+    <a href="/usuarios" class="text-dark text-decoration-none">Usuarios</a>
+    <a href="/ventas" class="text-dark text-decoration-none">Ventas</a>
+  </div>
+</nav>
+
+<div class="container-fluid mt-4">
+  <div class="row">
+    
+    <!-- Sidebar izquierdo de categorías -->
+    <div class="col-md-3 col-lg-2 mb-4">
+      <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white fw-bold">
+          Categorías
+        </div>
+        <ul class="list-group list-group-flush">
+          <li class="list-group-item">
+            <a href="#" class="text-decoration-none text-dark" data-categoria="Todos">
+              Todos los productos
+            </a>
+          </li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none text-dark" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none text-dark" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none text-dark" data-categoria="Construccion">Construcción</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none text-dark" data-categoria="Jardineria">Jardinería</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none text-dark" data-categoria="Fontaneria">Fontanería</a></li>
+          <li class="list-group-item"><a href="#" class="text-decoration-none text-dark" data-categoria="Seguridad">Seguridad</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Contenido principal -->
+    <div class="col-md-9 col-lg-10">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h4 class="fw-bold text-secondary">Gestión de Productos</h4>
+        <button type="button" class="btn btn-gradient" data-bs-toggle="modal" data-bs-target="#productoModal">
+          <i class="bi bi-plus-circle me-2"></i>Agregar Producto
+        </button>
+      </div>
+
+      <div class="row" id="productos-container">
+        <!-- Los productos se agregarán aquí dinámicamente -->
+      </div>
+
+    <!-- Modal para editar productos-->
+    <div class="modal fade" id="modalEditarProducto" tabindex="-1" aria-labelledby="modalEditarProductoLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <form id="formEditarProducto">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalEditarProductoLabel">Editar Producto</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+          </div>
+          <div class="modal-body">
+            <input type="hidden" id="editar_id_producto" name="id_producto">
+
+            <div class="mb-3">
+              <label for="editar_nom_producto" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="editar_nom_producto" name="nom_producto" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="editar_descripcion" class="form-label">Descripción</label>
+              <textarea class="form-control" id="editar_descripcion" name="descripcion" required></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="editar_categoria" class="form-label">Categoría</label>
+              <select class="form-select" id="editar_categoria" name="categoria" required>
+                <option value="">Selecciona una categoría</option>
+                <option value="Herramienta Manual">Herramienta Manual</option>
+                <option value="Herramienta Electrica">Herramienta Electrica</option>
+                <option value="Construccion">Construccion</option>
+                <option value="Jardineria">Jardineria</option>
+                <option value="Fontaneria">Fontaneria</option>
+                <option value="Seguridad">Seguridad</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="editar_stock" class="form-label">Stock</label>
+              <input type="number" class="form-control" id="editar_stock" name="stock" required>
+            </div>
+
+            <div class="mb-3">
+              <label for="editar_precio" class="form-label">Precio</label>
+              <input type="number" class="form-control" id="editar_precio" name="precio" step="0.01" required>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Imagen actual</label><br>
+              <img id="editar_imagen_actual" src="" alt="Imagen actual" width="100" class="mb-2 border rounded">
+              <input type="file" class="form-control" id="editar_imagen" name="imagen" accept="image/*">
+            </div>
+          </div>
+
+          <div class="modal-footer">
+            <button type="submit" class="btn btn-success">Guardar Cambios</button>
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          </div>
+        </form>
+      </div>
+    </div>
+</div>
+
+    </div>
+  </div>
+</div>
+ 
+<!-- Modal para crear productos-->
+<div class="modal fade" id="productoModal" tabindex="-1" aria-labelledby="productoModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="formProducto">
+        <div class="modal-header">
+          <h5 class="modal-title" id="productoModalLabel">Nuevo Producto</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="nom_producto" class="form-label">Nombre del producto</label>
+            <input type="text" class="form-control" id="nom_producto" name="nom_producto" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="descripcion" class="form-label">Descripción</label>
+            <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
+          </div>
+
+          <div class="mb-3">
+            <label for="categoria" class="form-label">Categoría</label>
+            <select class="form-select" id="categoria" name="categoria" required>
+              <option value="">Selecciona una categoría</option>
+              <option value="Herramienta Manual">Herramienta Manual</option>
+              <option value="Herramienta Electrica">Herramienta Electrica</option>
+              <option value="Construccion">Construccion</option>
+              <option value="Jardineria">Jardineria</option>
+              <option value="Fontaneria">Fontaneria</option>
+              <option value="Seguridad">Seguridad</option>
+            </select>
+          </div>
+
+          <div class="mb-3">
+            <label for="imagen" class="form-label">Seleccionar Imagen</label>
+            <input type="file" class="form-control" id="imagen" name="imagen" accept="image/*" required>
+        </div>
+
+          <div class="mb-3">
+            <label for="stock" class="form-label">Stock</label>
+            <input type="number" class="form-control" id="stock" name="stock" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="precio" class="form-label">Precio</label>
+            <input type="number" class="form-control" id="precio" name="precio" step="0.01" required>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success">Guardar</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+</div>
+</div>
+
+
+<!--Footer-->
+<footer class="bg-dark text-light pt-4 pb-3 mt-5">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-4 mb-3">
+        <h5>Dalmacia</h5>
+      </div>
+
+      <div class="col-md-2 mb-3">
+        <h6>Enlaces</h6>
+        <ul class="list-unstyled">
+          <li><a href="/administracion" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="/productos" class="text-light text-decoration-none">Productos</a></li>
+          <li><a href="/usuarios" class="text-light text-decoration-none">Usuarios</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Ventas</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <h6>Categorías</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Todos">Todos los productos</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Construccion">Construcción</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Jardineria">Jardinería</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Fontaneria">Fontanería</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Seguridad">Seguridad</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <h6>Contáctanos</h6>
+        <div>
+          <a href="#" class="text-light me-3"><i class="bi bi-facebook fs-5"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-twitter fs-5"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-instagram fs-5"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="bg-light">
+    <div class="text-end small">
+      &copy; 2025 Dalmacia. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+// Función para obtener el valor de una cookie
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [key, value] = cookie.trim().split('=');
+    if (key === name) return decodeURIComponent(value);
+  }
+  return null;
+}
+
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', () => {
+  const usuario = getCookie('nombre_usuario'); // <- asegúrate que esta cookie se llama así en tu login
+  const userInfo = document.getElementById('user-info');
+
+  if (!userInfo) return; // por si el elemento no existe
+
+  if (usuario) {
+    // Si el usuario está logueado
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-white">Hola, <strong>${usuario}</strong></span>
+          <a class="btn btn-sm btn-outline-light ms-2" href="/logout">
+            <i class="bi bi-box-arrow-right"></i> Salir
+          </a>
+        </div>
+      </div>
+    `;
+  } else {
+    // Si no está logueado
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <a class="text-white text-decoration-none d-flex align-items-center" href="/login">
+          <i class="bi bi-person me-1"></i> Iniciar sesión
+        </a>
+      </div>
+    `;
+  }
+});
+</script>
+<script>
+  // Obtener parámetros de la URL
+  const params = new URLSearchParams(window.location.search);
+  const terminoBusqueda = params.get('q') ? params.get('q').toLowerCase() : null;
+  const categoriaSeleccionada = params.get('categoria'); // 👈 NUEVO
+
+  // Obtener los productos desde el servidor
+  fetch('http://localhost:8080/producto')
+    .then(response => {
+      if (!response.ok) throw new Error(`Error HTTP: ${response.status}`);
+      return response.json();
+    })
+    .then(data => {
+      const productosContainer = document.getElementById('productos-container');
+
+      // Filtrar productos por búsqueda o categoría
+      let productosFiltrados = data;
+
+      if (terminoBusqueda) {
+        productosFiltrados = productosFiltrados.filter(p =>
+          p.nom_producto.toLowerCase().includes(terminoBusqueda) ||
+          p.descripcion.toLowerCase().includes(terminoBusqueda)
+        );
+      }
+
+      if (categoriaSeleccionada && categoriaSeleccionada.toLowerCase() !== "todos") {
+        productosFiltrados = productosFiltrados.filter(p => 
+          p.categoria.toLowerCase() === categoriaSeleccionada.toLowerCase()
+        );
+      }
+
+      // Mostrar productos
+      productosContainer.innerHTML = "";
+      if (productosFiltrados.length === 0) {
+        productosContainer.innerHTML = `<p class="text-center text-muted">No se encontraron productos.</p>`;
+        return;
+      }
+
+      productosFiltrados.forEach(producto => {
+        const productCard = document.createElement('div');
+        productCard.classList.add('col-md-4', 'mb-4');
+
+        //Precio en pesos chilenos (CLP)
+        const precioCLP = producto.precio.toLocaleString("es-CL", { style: "currency", currency: "CLP" });
+
+        productCard.innerHTML = `
+          <div class="card h-100 shadow-sm">
+            <img class="card-img-top" src="${producto.imagen}" alt="${producto.nom_producto}">
+            <div class="card-body d-flex flex-column justify-content-between">
+              <div>
+                <h5 class="card-title">${producto.nom_producto}</h5>
+                <p class="card-text">${producto.descripcion}</p>
+                <p><strong>Precio:</strong> ${precioCLP}</p>
+                <p><strong>Categoría:</strong> ${producto.categoria}</p>
+              </div>
+              <div class="mt-3">
+                <a href="#" class="btn btn-outline-info btn-editar btn-sm" data-id="${producto.id_producto}">Modificar</a>
+                <a class="btn btn-danger btn-sm" onclick="eliminarProducto(${producto.id_producto})">Eliminar</a>
+              </div>
+            </div>
+          </div>
+        `;
+        productosContainer.appendChild(productCard);
+      });
+    })
+    .catch(error => {
+      console.error('Error al obtener los productos:', error);
+    });
+</script>
+<script>
+  document.getElementById('formProducto').addEventListener('submit', function (e) {
+  e.preventDefault();
+
+  const form = document.getElementById('formProducto');
+  const formData = new FormData(form);
+  
+  fetch('/registrar-producto', {
+    method: 'POST',
+    body: formData
+  })
+  .then(response => {
+    if (!response.ok) throw new Error('Error al guardar el producto');
+    return response.json();
+  })
+  .then(data => {
+      alert('Producto registrado exitosamente');
+      location.reload();
+      })
+    .catch(error => {
+    console.error(error);
+    alert('Error al registrar el producto');
+    });
+  });
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const modalEditar = new bootstrap.Modal(document.getElementById('modalEditarProducto'));
+  const formEditar = document.getElementById('formEditarProducto');
+
+  // Delegación: escuchar clicks en botones "Modificar"
+  document.addEventListener('click', async (e) => {
+    if (e.target.classList.contains('btn-editar')) {
+      e.preventDefault();
+      const id = e.target.getAttribute('data-id');
+      try {
+        const resp = await fetch(`/producto/${id}`);
+        if (!resp.ok) throw new Error('No se pudo obtener el producto');
+        const producto = await resp.json();
+
+        if (!producto) throw new Error('Producto no encontrado');
+
+        // Llenar los campos del modal
+        document.getElementById('editar_id_producto').value = producto.id_producto || '';
+        document.getElementById('editar_nom_producto').value = producto.nom_producto || '';
+        document.getElementById('editar_descripcion').value = producto.descripcion || '';
+        document.getElementById('editar_stock').value = producto.stock || '';
+        document.getElementById('editar_precio').value = producto.precio || '';
+
+        // === Mostrar imagen actual ===
+        const imagenActual = document.getElementById('editar_imagen_actual');
+        if (producto.imagen && producto.imagen.trim() !== '') {
+          // Evitar duplicar /imagenes/
+          imagenActual.src = producto.imagen.includes('/imagenes/') 
+            ? producto.imagen 
+            : `${producto.imagen}`;
+        } else {
+          imagenActual.src = '/imagenes/placeholder.jpg';
+        }
+
+        // Seleccionar categoría actual
+        const selectCategoria = document.getElementById('editar_categoria');
+        const categoriaProducto = (producto.categoria || '').trim();
+
+        // Intenta asignarla directamente
+        selectCategoria.value = categoriaProducto;
+
+        // Si no se asignó (por diferencias de mayúsculas/minúsculas), intenta en minúsculas
+        if (selectCategoria.value === "") {
+          for (const opcion of selectCategoria.options) {
+            if (opcion.value.toLowerCase() === categoriaProducto.toLowerCase()) {
+              selectCategoria.value = opcion.value;
+              break;
+            }
+          }
+        }
+
+        modalEditar.show();
+      } catch (err) {
+        console.error(err);
+        alert('Error al obtener los datos del producto');
+      }
+    }
+  });
+
+  // Enviar formulario de edición
+  formEditar.addEventListener('submit', async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData(formEditar);
+
+  try {
+    const resp = await fetch('/producto/modificar', {
+      method: 'POST',
+      body: formData
+    });
+
+    const data = await resp.json();
+    if (data.success) {
+      alert('Producto actualizado correctamente');
+      modalEditar.hide();
+      location.reload();
+    } else {
+      alert('Error: ' + (data.message || 'No se pudo modificar el producto'));
+    }
+  } catch (err) {
+    console.error('Error al modificar producto:', err);
+    alert('Error de conexión o servidor.');
+  }
+  });
+});
+</script>
+<script>
+async function eliminarProducto(id_producto) {
+  const confirmar = confirm("¿Estás seguro de que deseas eliminar este producto?");
+  if (!confirmar) return;
+
+  try {
+    const respuesta = await fetch('/eliminar-producto', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id_producto })
+    });
+
+    const data = await respuesta.json();
+
+    if (respuesta.ok) {
+      alert(data.mensaje);
+      // Recargar la página o eliminar visualmente la fila
+      location.reload();
+    } else {
+      alert(data.error || 'No se pudo eliminar el producto');
+    }
+  } catch (error) {
+    console.error('Error al eliminar:', error);
+    alert('Error al eliminar el producto');
+  }
+}
+</script>
+<script>
+  document.querySelectorAll('[data-categoria]').forEach(item => {
+    item.addEventListener('click', e => {
+      // Evita afectar botones dentro de formularios o modales
+      if (item.closest('form') || item.closest('.modal')) return;
+
+      e.preventDefault();
+      const categoria = item.getAttribute('data-categoria');
+      const url = new URL(window.location.origin + '/productos');
+
+      if (categoria.toLowerCase() !== "todos") {
+        url.searchParams.set('categoria', categoria);
+      }
+
+      window.location.href = url.toString();
+    });
+  });
+</script>
+</body>
+</html>

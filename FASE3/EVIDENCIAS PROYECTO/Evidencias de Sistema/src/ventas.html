@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ventas</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar superior -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-2 shadow-sm">
+  <a class="navbar-brand fw-bold text-uppercase" href="#">Dalmacia</a>
+
+  <form id="form-busqueda-admin" class="d-flex mx-3 flex-grow-1" method="GET" action="/productos">
+    <input id="input-busqueda-admin" name="q" class="form-control me-2" type="search" placeholder="Buscar productos...">
+    <button class="btn btn-outline-warning" type="submit"><i class="bi bi-search"></i></button>
+  </form>
+
+  <div id="user-info" class="text-light fw-semibold"></div>
+</nav>
+
+<!-- Navbar inferior -->
+<nav class="bg-light border-top border-bottom py-2">
+  <div class="container d-flex gap-4">
+    <a href="/administracion" class="text-dark text-decoration-none">Home</a>
+    <a href="/productos" class="text-dark text-decoration-none">Productos</a>
+    <a href="/usuarios" class="text-dark text-decoration-none">Usuarios</a>
+    <a href="/ventas" class="text-dark text-decoration-none ">Ventas</a>
+  </div>
+</nav>
+
+<!-- Contenido principal -->
+
+<div class="container mt-5">
+
+    <h1 class="text-center mb-4">Historial de Ventas</h1>
+
+    <!-- Filtros -->
+    <div class="filter-box shadow-sm">
+        <div class="row g-3">
+
+            <!-- Buscar por fecha exacta -->
+            <div class="col-md-5">
+                <label class="form-label">Buscar por Día</label>
+                <input type="date" id="filtroDia" class="form-control">
+            </div>
+
+            <!-- Buscar por mes -->
+            <div class="col-md-5">
+                <label class="form-label">Buscar por Mes</label>
+                <input type="month" id="filtroMes" class="form-control">
+            </div>
+
+            <div class="col-md-2 d-flex align-items-end">
+                <button class="btn btn-primary w-100" onclick="buscarCompras()">Buscar</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-responsive">
+        <table class="table table-bordered table-striped" id="tablaCompras">
+            <thead>
+                <tr class="text-center">
+                    <th>ID Compra</th>
+                    <th>ID Usuario</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                    <th>Fecha</th>
+                </tr>
+            </thead>
+            <tbody id="comprasBody">
+            </tbody>
+        </table>
+    </div>
+
+    <p id="emptyMsg" class="empty-message text-center">No se encontraron Ventas.</p>
+
+</div>
+
+
+<!-- Footer -->
+<footer class="bg-dark text-light pt-4 pb-3 mt-5">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-4 mb-3">
+        <h5>Dalmacia</h5>
+      </div>
+
+      <div class="col-md-2 mb-3">
+        <h6>Enlaces</h6>
+        <ul class="list-unstyled">
+          <li><a href="/administracion" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="/productos" class="text-light text-decoration-none">Productos</a></li>
+          <li><a href="/usuarios" class="text-light text-decoration-none">Usuarios</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Ventas</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <h6>Categorías</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Todos">Todos los productos</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Construccion">Construcción</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Jardineria">Jardinería</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Fontaneria">Fontanería</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Seguridad">Seguridad</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <h6>Contáctanos</h6>
+        <div>
+          <a href="#" class="text-light me-3"><i class="bi bi-facebook fs-5"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-twitter fs-5"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-instagram fs-5"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="bg-light">
+    <div class="text-end small">
+      &copy; 2025 Dalmacia. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+
+<script>
+// Función para obtener el valor de una cookie
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [key, value] = cookie.trim().split('=');
+    if (key === name) return decodeURIComponent(value);
+  }
+  return null;
+}
+
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', () => {
+  const usuario = getCookie('nombre_usuario'); // <- asegúrate que esta cookie se llama así en tu login
+  const userInfo = document.getElementById('user-info');
+
+  if (!userInfo) return; // por si el elemento no existe
+
+  if (usuario) {
+    // Si el usuario está logueado
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-white">Hola, <strong>${usuario}</strong></span>
+          <a class="btn btn-sm btn-outline-light ms-2" href="/logout">
+            <i class="bi bi-box-arrow-right"></i> Salir
+          </a>
+        </div>
+      </div>
+    `;
+  } else {
+    // Si no está logueado
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <a class="text-white text-decoration-none d-flex align-items-center" href="/login">
+          <i class="bi bi-person me-1"></i> Iniciar sesión
+        </a>
+      </div>
+    `;
+  }
+});
+</script>
+<script>
+
+// Cargar todas las compras
+document.addEventListener("DOMContentLoaded", cargarTodasLasCompras);
+
+async function cargarTodasLasCompras() {
+    try {
+        const res = await fetch("/compra");
+        const data = await res.json();
+        mostrarCompras(data);
+    } catch (err) {
+        console.error("Error al cargar todas las compras:", err);
+    }
+}
+
+// Busqueda por dia
+async function buscarCompras() {
+    const dia = document.getElementById("filtroDia").value;
+    const mes = document.getElementById("filtroMes").value;
+
+    let url = "";
+
+    if (dia) {
+        url = `/compra/dia/${dia}`;
+    } else if (mes) {
+        url = `/compra/mes/${mes}`;
+    } else {
+        // Si no hay filtros → mostrar todas otra vez
+        cargarTodasLasCompras();
+        return;
+    }
+
+    try {
+        const res = await fetch(url);
+        const data = await res.json();
+        mostrarCompras(data);
+    } catch (error) {
+        console.error("Error cargando compras filtradas:", error);
+    }
+}
+
+// Tabla de compras
+function mostrarCompras(compras) {
+    const tbody = document.getElementById("comprasBody");
+    const emptyMsg = document.getElementById("emptyMsg");
+
+    tbody.innerHTML = "";
+
+    if (!compras || compras.length === 0) {
+        emptyMsg.style.display = "block";
+        return;
+    }
+
+    emptyMsg.style.display = "none";
+
+    compras.forEach(c => {
+        const fila = document.createElement("tr");
+
+        fila.innerHTML = `
+            <td class="text-center">${c.id_compra}</td>
+            <td class="text-center">${c.id_usuario}</td>
+            <td>${c.listaitem}</td>
+            <td class="text-center">$${Number(c.total).toLocaleString()}</td>
+            <td class="text-center">${new Date(c.fecha_compra).toLocaleString()}</td>
+        `;
+
+        tbody.appendChild(fila);
+    });
+}
+</script>
+
+<script>
+  const formAdmin = document.getElementById('form-busqueda-admin');
+  const inputAdmin = document.getElementById('input-busqueda-admin');
+
+  if (formAdmin && inputAdmin) {
+    formAdmin.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const termino = inputAdmin.value.trim();
+      if (!termino) return;
+
+      // Redirige a la página de productos con la búsqueda
+      window.location.href = `/productos?q=${encodeURIComponent(termino)}`;
+    });
+  }
+</script>
+
+
+<script>
+  document.querySelectorAll('[data-categoria]').forEach(item => {
+    item.addEventListener('click', e => {
+      // Evitar que funcione dentro de formularios o modales
+      if (item.closest('form') || item.closest('.modal')) return;
+
+      e.preventDefault();
+      const categoria = item.getAttribute('data-categoria');
+      const url = new URL(window.location.origin + '/productos');
+
+      if (categoria.toLowerCase() !== "todos") {
+        url.searchParams.set('categoria', categoria);
+      }
+      // Si es "todos", no agregamos parámetro, va a /productos sin filtro
+
+      window.location.href = url.toString();
+    });
+  });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Catalogo</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar superior-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-2">
+  <a class="navbar-brand fw-bold" href="/">Dalmacia</a>
+
+    <form id="form-busqueda" class="d-flex mx-3 flex-grow-1" role="search" method="GET" action="/catalogo">
+      <input id="input-busqueda" name="q" class="form-control me-2" type="search" placeholder="Buscar productos...">
+      <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+    </form>
+
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav ms-auto">
+      <!-- Aquí se insertará el nombre del usuario después de iniciar sesión -->
+      <div id="user-info"></div>
+    </ul>
+  </div>
+</nav>
+
+
+<!-- Navbar inferior -->
+<nav class="bg-light border-top border-bottom py-2">
+  <div class="container d-flex gap-4">
+    <a href="/" class="text-dark text-decoration-none">Home</a>
+    <a href="/catalogo" class="text-dark text-decoration-none fw-bold border-bottom border-3 border-primary">Catalogo</a>
+    <div class="dropdown">
+      <a class="text-dark text-decoration-none dropdown-toggle" href="#" role="button" id="dropdownCategorias" data-bs-toggle="dropdown" aria-expanded="false">
+        Categorías
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+        <li><a class="dropdown-item" href="#" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Construccion">Construcción</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Jardineria">Jardinería</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Fontaneria">Fontanería</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Seguridad">Seguridad</a></li>
+      </ul>
+    </div>
+    <a href="#" class="text-dark text-decoration-none">Sobre Nosotros</a>
+  </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+      <!-- Filtro de Categorías -->
+      <div class="col-md-3">
+        <div class="card">
+          <div class="card-header">
+            <h4 class="mb-0">Filtros</h4>
+          </div>
+          <div class="card-body">
+            <h5 class="mb-3">Categorías</h5>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Herramienta Manual" id="herramientaManual">
+              <label class="form-check-label" for="herramientaManual">Herramientas Manuales</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Herramienta Electrica" id="herramientaElectrica">
+              <label class="form-check-label" for="herramientaElectrica">Herramientas Eléctricas</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Construccion" id="construccion">
+              <label class="form-check-label" for="construccion">Construcción</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Jardineria" id="jardineria">
+              <label class="form-check-label" for="jardineria">Jardinería</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Fontaneria" id="fontaneria">
+              <label class="form-check-label" for="fontaneria">Fontanería</label>
+            </div>
+
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" value="Seguridad" id="seguridad">
+              <label class="form-check-label" for="seguridad">Seguridad</label>
+            </div>
+
+            <div class="dropdown ">
+            <h5 class="mb-3">Por orden</h5>
+            <button class="btn btn-sm btn-outline-primary dropdown-toggle" type="button" id="ordenDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              Ordenar
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="ordenDropdown">
+              <li><a class="dropdown-item" href="#" onclick="ordenarProductos('asc')">De A-Z</a></li>
+              <li><a class="dropdown-item" href="#" onclick="ordenarProductos('desc')">De Z-A</a></li>
+            </ul>
+          </div>
+
+          </div>
+          
+        </div>
+      </div>
+
+      <!-- Contenedor de Productos -->
+      <div class="col-md-9">
+        <h4> PRODUCTOS</h4>
+
+        <div class="row" id="productos-container">
+          <!-- Productos dinámicos se insertan aquí -->
+        </div>
+      </div>
+    </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-light pt-4 pb-3">
+  <div class="container">
+    <div class="row">
+      <!-- Información -->
+      <div class="col-md-4 mb-3">
+        <h5>Dalmacia</h5>
+      </div>
+      <!-- Enlaces rápidos -->
+      <div class="col-md-2 mb-3">
+        <h6>Enlaces</h6>
+        <ul class="list-unstyled">
+          <li><a href="/" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="/catalogo" class="text-light text-decoration-none">Catalogo</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Sobre nosotros</a></li>
+        </ul>
+      </div>
+
+      <!-- Soporte -->
+      <div class="col-md-3 mb-3">
+        <h6>Categorias</h6>
+        <ul class="list-unstyled">
+          <li><a class="dropdown-item" href="#" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Construccion">Construcción</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Jardineria">Jardinería</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Fontaneria">Fontanería</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Seguridad">Seguridad</a></li>
+        </ul>
+      </div>
+
+      <!-- Contacto -->
+      <div class="col-md-3 mb-3">
+        <h6>Contactanos</h6>
+        <div>
+          <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+
+    </div>
+    <hr class="bg-light">
+    <div class="text-end small">
+      &copy; 2025 Dalmacia. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [key, value] = cookie.trim().split('=');
+    if (key === name) return decodeURIComponent(value);
+  }
+  return null;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const usuario = getCookie('nombre_usuario');
+  const userInfo = document.getElementById('user-info');
+
+  if (usuario) {
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center gap-3 w-100">
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-white">Hola, ${usuario}</span>
+          <a class="btn btn-sm btn-outline-light" href="/logout">Salir</a>
+        </div>
+        <div class="position-relative ms-auto">
+          <a id="carrito-btn" class="text-white text-decoration-none d-flex align-items-center" href="#">
+            <i class="bi bi-cart me-1"></i> Carrito
+          </a>
+          <span class="cart-badge d-none">0</span>
+        </div>
+      </div>
+    `;
+
+    const carritoBtn = document.getElementById('carrito-btn');
+    const badge = document.querySelector('.cart-badge');
+
+    const popover = new bootstrap.Popover(carritoBtn, {
+      html: true,
+      content: '<div class="text-center text-muted py-2">Cargando carrito...</div>',
+      placement: 'bottom',
+      sanitize: false,
+      trigger: 'manual'
+    });
+
+    carritoBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await cargarCarrito(true);
+    });
+
+    async function cargarCarrito(mostrar = false) {
+      try {
+        const response = await fetch('/carrito', { credentials: 'include' });
+        if (response.status === 401) return window.location.href = '/login';
+
+        const data = await response.json();
+        const productos = data.carrito || [];
+
+        if (productos.length === 0) {
+          actualizarPopover('<div class="text-center text-muted py-2">Tu carrito está vacío</div>');
+          badge.classList.add('d-none');
+          if (mostrar) popover.show();
+          return;
+        }
+
+        let contenido = `<div class="list-group small" style="max-width:300px;">`;
+        let total = 0;
+
+        productos.forEach(item => {
+          total += Number(item.subtotal);
+          contenido += `
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div class="text-truncate" style="max-width:150px;">
+                ${item.nom_producto}<br>
+                <small class="text-muted">x${item.cantidad}</small>
+                <div class="mt-1">
+                  <button class="btn btn-sm btn-outline-secondary btn-minus" data-id="${item.id_producto}" data-cantidad="${item.cantidad}">-</button>
+                  <button class="btn btn-sm btn-outline-secondary btn-plus" data-id="${item.id_producto}" data-cantidad="${item.cantidad}">+</button>
+                </div>
+              </div>
+              <span class="fw-semibold">${Number(item.subtotal).toLocaleString("es-CL", { style: "currency", currency: "CLP" })}</span>
+            </div>
+          `;
+        });
+
+        contenido += `
+          <div class="list-group-item text-end fw-bold border-top">
+            Total: ${total.toLocaleString("es-CL", { style: "currency", currency: "CLP" })}
+          </div>
+          <div class="text-center mt-2">
+            <button id="vaciar-carrito" class="btn btn-sm btn-danger mb-1">Vaciar carrito</button>
+            <a href="/checkout" class="btn btn-sm btn-success">Ir a pagar</a>
+          </div>
+        </div>`;
+
+        actualizarPopover(contenido);
+
+        badge.textContent = productos.reduce((sum, p) => sum + Number(p.cantidad), 0);
+        badge.classList.remove('d-none');
+
+        if (mostrar) popover.show();
+
+        // Eventos aumentar/disminuir productos
+        document.querySelectorAll('.btn-plus').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            modificarCantidad(id, 1); // incremento +1
+          });
+        });
+
+        document.querySelectorAll('.btn-minus').forEach(btn => {
+          btn.addEventListener('click', () => {
+            const id = btn.dataset.id;
+            modificarCantidad(id, -1); // decremento -1
+          });
+        });
+
+
+        // Evento vaciar carrito
+        const vaciarBtn = document.getElementById('vaciar-carrito');
+        if (vaciarBtn) vaciarBtn.addEventListener('click', vaciarCarrito);
+
+      } catch (error) {
+        console.error('Error al cargar el carrito:', error);
+        actualizarPopover('<div class="text-danger text-center py-2">Error al cargar el carrito.</div>');
+        if (mostrar) popover.show();
+      }
+    }
+
+    function actualizarPopover(contenido) {
+      const instancia = bootstrap.Popover.getInstance(carritoBtn);
+      if (!instancia) return;
+
+      if (typeof instancia.setContent === 'function') {
+        instancia.setContent({ '.popover-body': contenido });
+      } else {
+        const tip = instancia.getTipElement();
+        if (tip && tip.querySelector('.popover-body')) {
+          tip.querySelector('.popover-body').innerHTML = contenido;
+        }
+      }
+    }
+
+    async function modificarCantidad(id_producto, cantidad) {
+      const res = await fetch('/carrito/modificar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ id_producto, cantidad })
+      });
+      const data = await res.json();
+      if (!data.success) console.error(data.message);
+      cargarCarrito(true);
+    }
+
+    async function vaciarCarrito() {
+      const res = await fetch('/carrito/vaciar', {
+        method: 'POST',
+        credentials: 'include'
+      });
+      const data = await res.json();
+      if (!data.success) console.error(data.message);
+      cargarCarrito(true);
+    }
+
+    window.cargarCarrito = () => cargarCarrito(false);
+    cargarCarrito(false);
+
+  } else {
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center gap-3 w-100">
+        <div class="d-flex align-items-center gap-2">
+          <a class="text-white text-decoration-none d-flex align-items-center" href="/login">
+            <i class="bi bi-person me-1"></i> Iniciar sesión
+          </a>
+        </div>
+        <div class="position-relative ms-auto">
+          <a class="text-white text-decoration-none d-flex align-items-center" href="/login">
+            <i class="bi bi-cart me-1"></i> Carrito
+          </a>
+          <span class="cart-badge d-none">0</span>
+        </div>
+      </div>
+    `;
+  }
+});
+</script>
+
+<script>
+let productos = [];
+let productosFiltrados = [];
+
+// Cargar todos los productos desde el servidor
+fetch('http://localhost:8080/producto')
+  .then(res => res.json())
+  .then(data => {
+    productos = data;
+    productosFiltrados = [...productos];
+
+    // Leer parámetros de URL
+    const params = new URLSearchParams(window.location.search);
+    const terminoBusqueda = params.get("q");
+    const categorias = params.getAll("categoria");
+    const orden = params.get("orden");
+
+    // Aplicar filtros iniciales
+    if (terminoBusqueda) {
+      document.getElementById("input-busqueda").value = terminoBusqueda;
+    }
+
+    // Marcar categorías
+    document.querySelectorAll('.form-check input').forEach(input => {
+      if (categorias.includes(input.value)) input.checked = true;
+      input.addEventListener('change', () => {
+        filtrarYMostrar();
+      });
+    });
+
+    filtrarYMostrar();
+
+    // Aplicar orden si existe
+    if (orden) ordenarProductos(orden);
+  })
+  .catch(err => console.error("Error al cargar productos:", err));
+
+// Función para filtrar y mostrar productos
+function filtrarYMostrar() {
+  const termino = document.getElementById("input-busqueda").value.toLowerCase();
+  const categoriasSeleccionadas = Array.from(document.querySelectorAll('.form-check input:checked')).map(i => i.value);
+
+  productosFiltrados = productos.filter(p => {
+    const matchesBusqueda = !termino || p.nom_producto.toLowerCase().includes(termino) || p.descripcion.toLowerCase().includes(termino);
+    const matchesCategoria = categoriasSeleccionadas.length === 0 || categoriasSeleccionadas.includes(p.categoria);
+    return matchesBusqueda && matchesCategoria;
+  });
+
+  mostrarProductos(productosFiltrados);
+  actualizarURL();
+}
+
+// Función para mostrar productos
+function mostrarProductos(lista) {
+  const container = document.getElementById("productos-container");
+  if (!container) return;
+  container.innerHTML = "";
+
+  if (lista.length === 0) {
+    container.innerHTML = `<p class="text-center">No se encontraron productos.</p>`;
+    return;
+  }
+
+  lista.forEach(p => {
+    const card = document.createElement('div');
+    card.classList.add('col-md-4', 'mb-3');
+
+    // Precio a pesos chilenos (CLP)
+    const precioCLP = p.precio.toLocaleString("es-CL", { style: "currency", currency: "CLP" });
+
+    card.innerHTML = `
+      <div class="card h-100">
+        <img src="${p.imagen}" class="card-img-top" alt="${p.nom_producto}">
+        <div class="card-body">
+          <h5 class="card-title">${p.nom_producto}</h5>
+          <p class="card-text">${p.descripcion}</p>
+          <p><strong>Precio:</strong> ${precioCLP}</p> <!-- <-- aquí usamos el formato -->
+          <a href="/detalleproducto?id=${p.id_producto}" class="btn btn-primary mb-2">Ver más</a>
+          <button class="btn btn-success" onclick="agregarAlCarrito(${p.id_producto}, 1)">Agregar al carrito</button>
+        </div>
+      </div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// Buscador con actualización de URL
+const formBusqueda = document.getElementById('form-busqueda');
+if (formBusqueda) {
+  formBusqueda.addEventListener('submit', (e) => {
+    e.preventDefault();
+    filtrarYMostrar();
+  });
+}
+
+// Ordenamiento
+function ordenarProductos(tipo) {
+  if (tipo === 'asc') {
+    productosFiltrados.sort((a, b) => a.nom_producto.localeCompare(b.nom_producto));
+  } else if (tipo === 'desc') {
+    productosFiltrados.sort((a, b) => b.nom_producto.localeCompare(a.nom_producto));
+  }
+  mostrarProductos(productosFiltrados);
+  actualizarURL(tipo);
+}
+
+// Actualizar URL con filtros y orden
+function actualizarURL(ordenActual = null) {
+  const params = new URLSearchParams();
+  const termino = document.getElementById("input-busqueda").value.trim();
+  if (termino) params.set('q', termino);
+
+  document.querySelectorAll('.form-check input:checked').forEach(input => {
+    params.append('categoria', input.value);
+  });
+
+  if (ordenActual) params.set('orden', ordenActual);
+
+  const newUrl = `${window.location.pathname}?${params.toString()}`;
+  window.history.replaceState(null, '', newUrl);
+}
+
+// Función para agregar productos al carrito
+window.agregarAlCarrito = async (id_producto, cantidad = 1) => {
+  try {
+    const res = await fetch('/carrito/agregar', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'include',
+      body: JSON.stringify({ id_producto, cantidad })
+    });
+    const data = await res.json();
+    if (!res.ok || !data.success) throw new Error(data.message || "Error desconocido");
+    alert("Producto agregado al carrito");
+  } catch (err) {
+    console.error(err);
+    alert("Error al agregar producto: " + (err.message || ""));
+  }
+};
+</script>
+<script>
+// Seleccionamos todos los items del dropdown
+document.querySelectorAll('.dropdown-item[data-categoria]').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.preventDefault(); // Evitar navegación normal
+
+    const categoria = item.getAttribute('data-categoria');
+
+    // Construimos la URL del catálogo con el parámetro de categoría
+    const url = new URL(window.location.origin + '/catalogo');
+    url.searchParams.set('categoria', categoria);
+
+    // Redirigimos a esa URL
+    window.location.href = url.toString();
+  });
+});
+</script>
+</body>
+</html>

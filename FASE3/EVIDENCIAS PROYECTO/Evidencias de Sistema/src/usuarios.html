@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Usuarios</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar superior -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-2 shadow-sm">
+  <a class="navbar-brand fw-bold text-uppercase" href="#">Dalmacia</a>
+
+  <form id="form-busqueda-admin" class="d-flex mx-3 flex-grow-1" method="GET" action="/productos">
+    <input id="input-busqueda-admin" name="q" class="form-control me-2" type="search" placeholder="Buscar productos...">
+    <button class="btn btn-outline-warning" type="submit"><i class="bi bi-search"></i></button>
+  </form>
+
+  <div id="user-info" class="text-light fw-semibold"></div>
+</nav>
+
+<!-- Navbar inferior -->
+<nav class="bg-light border-top border-bottom py-2">
+  <div class="container d-flex gap-4">
+    <a href="/administracion" class="text-dark text-decoration-none">Home</a>
+    <a href="/productos" class="text-dark text-decoration-none">Productos</a>
+    <a href="/usuarios" class="text-dark text-decoration-none fw-bold border-bottom border-3 border-primary">Usuarios</a>
+    <a href="/ventas" class="text-dark text-decoration-none">Ventas</a>
+  </div>
+</nav>
+
+<!-- Contenido principal -->
+<div class="container-fluid mt-5 px-4">
+  <div class="row">
+    <div class="col-md-9 col-lg-10">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h3 class="fw-bold text-secondary">Gestión de Usuarios</h3>
+        <!-- Botón para registrar usuario -->
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalRegistro">
+          <i class="bi bi-person-plus-fill"></i> Registrar Usuario
+        </button>
+      </div>
+
+      <!-- Tabla de usuarios -->
+      <table class="table table-striped" id="tabla-usuarios">
+        <thead class="table-dark">
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Apellido Paterno</th>
+            <th>Apellido Materno</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aquí se cargarán los usuarios dinámicamente -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+
+<!-- Modal Registro Usuario -->
+<div class="modal fade" id="modalRegistro" tabindex="-1" aria-labelledby="modalRegistroLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalRegistroLabel">Registrar Usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+      </div>
+      <div class="modal-body">
+        <form id="formRegistro">
+          <div class="mb-3">
+            <label for="nom_usuario" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="nom_usuario" name="nom_usuario" required>
+          </div>
+          <div class="mb-3">
+            <label for="apep_usuario" class="form-label">Apellido Paterno</label>
+            <input type="text" class="form-control" id="apep_usuario" name="apep_usuario" required>
+          </div>
+          <div class="mb-3">
+            <label for="apem_usuario" class="form-label">Apellido Materno</label>
+            <input type="text" class="form-control" id="apem_usuario" name="apem_usuario" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="pass" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="pass" name="pass" required>
+          </div>
+          <div class="mb-3">
+            <label for="rol" class="form-label">Rol</label>
+            <select class="form-select" id="rol" name="rol">
+              <option value="0">Usuario</option>
+              <option value="1">Administrador</option>
+            </select>
+          </div>
+          <div id="mensajeRegistro" class="mb-2"></div>
+          <button type="submit" class="btn btn-primary">Registrar</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal para editar usuario -->
+<div class="modal fade" id="modalEditarUsuario" tabindex="-1" aria-labelledby="modalEditarUsuarioLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="form-editar-usuario">
+        <div class="modal-header">
+          <h5 class="modal-title" id="modalEditarUsuarioLabel">Editar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editar-id-usuario" name="id_usuario">
+          <div class="mb-3">
+            <label for="editar-nom-usuario" class="form-label">Nombre</label>
+            <input type="text" class="form-control" id="editar-nom-usuario" name="nom_usuario" required>
+          </div>
+          <div class="mb-3">
+            <label for="editar-apep-usuario" class="form-label">Apellido Paterno</label>
+            <input type="text" class="form-control" id="editar-apep-usuario" name="apep_usuario" required>
+          </div>
+          <div class="mb-3">
+            <label for="editar-apem-usuario" class="form-label">Apellido Materno</label>
+            <input type="text" class="form-control" id="editar-apem-usuario" name="apem_usuario" required>
+          </div>
+          <div class="mb-3">
+            <label for="editar-email" class="form-label">Email</label>
+            <input type="email" class="form-control" id="editar-email" name="email" required>
+          </div>
+          <div class="mb-3">
+            <label for="editar-pass" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="editar-pass" name="pass">
+          </div>
+          <div class="mb-3">
+            <label for="editar-rol" class="form-label">Rol</label>
+            <select class="form-select" id="editar-rol" name="rol">
+              <option value="0">Usuario</option>
+              <option value="1">Admin</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="submit" class="btn btn-warning">Guardar cambios</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-light pt-4 pb-3 mt-5">
+  <div class="container">
+    <div class="row">
+
+      <div class="col-md-4 mb-3">
+        <h5>Dalmacia</h5>
+      </div>
+
+      <div class="col-md-2 mb-3">
+        <h6>Enlaces</h6>
+        <ul class="list-unstyled">
+          <li><a href="/administracion" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="/productos" class="text-light text-decoration-none">Productos</a></li>
+          <li><a href="/usuarios" class="text-light text-decoration-none">Usuarios</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Ventas</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <h6>Categorías</h6>
+        <ul class="list-unstyled">
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Todos">Todos los productos</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Construccion">Construcción</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Jardineria">Jardinería</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Fontaneria">Fontanería</a></li>
+          <li><a href="#" class="text-light text-decoration-none" data-categoria="Seguridad">Seguridad</a></li>
+        </ul>
+      </div>
+
+      <div class="col-md-3 mb-3">
+        <h6>Contáctanos</h6>
+        <div>
+          <a href="#" class="text-light me-3"><i class="bi bi-facebook fs-5"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-twitter fs-5"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-instagram fs-5"></i></a>
+        </div>
+      </div>
+
+    </div>
+
+    <hr class="bg-light">
+    <div class="text-end small">
+      &copy; 2025 Dalmacia. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+
+<script>
+// Función para obtener el valor de una cookie
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [key, value] = cookie.trim().split('=');
+    if (key === name) return decodeURIComponent(value);
+  }
+  return null;
+}
+
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', () => {
+  const usuario = getCookie('nombre_usuario'); // <- asegúrate que esta cookie se llama así en tu login
+  const userInfo = document.getElementById('user-info');
+
+  if (!userInfo) return; // por si el elemento no existe
+
+  if (usuario) {
+    // Si el usuario está logueado
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-white">Hola, <strong>${usuario}</strong></span>
+          <a class="btn btn-sm btn-outline-light ms-2" href="/logout">
+            <i class="bi bi-box-arrow-right"></i> Salir
+          </a>
+        </div>
+      </div>
+    `;
+  } else {
+    // Si no está logueado
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center w-100">
+        <a class="text-white text-decoration-none d-flex align-items-center" href="/login">
+          <i class="bi bi-person me-1"></i> Iniciar sesión
+        </a>
+      </div>
+    `;
+  }
+});
+</script>
+<script>
+  const formAdmin = document.getElementById('form-busqueda-admin');
+  const inputAdmin = document.getElementById('input-busqueda-admin');
+
+  if (formAdmin && inputAdmin) {
+    formAdmin.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const termino = inputAdmin.value.trim();
+      if (!termino) return;
+
+      // Redirige a la página de productos con la búsqueda
+      window.location.href = `/productos?q=${encodeURIComponent(termino)}`;
+    });
+  }
+</script>
+<script>
+async function cargarUsuarios() {
+  try {
+    const res = await fetch('/usuario');
+    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+    const usuarios = await res.json();
+
+    const tbody = document.querySelector('#tabla-usuarios tbody');
+    tbody.innerHTML = '';
+
+    usuarios.forEach(usuario => {
+      // Mapear rol a texto legible
+      const rolTexto = usuario.rol == 1 ? 'Admin' : 'Cliente';
+
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td>${usuario.id_usuario}</td>
+        <td>${usuario.nom_usuario}</td>
+        <td>${usuario.apep_usuario}</td>
+        <td>${usuario.apem_usuario}</td>
+        <td>${usuario.email}</td>
+        <td>${rolTexto}</td>
+        <td>
+          <button class="btn btn-sm btn-warning me-1" onclick="abrirModalEditar(${usuario.id_usuario}, '${usuario.nom_usuario}', '${usuario.apep_usuario}', '${usuario.apem_usuario}', '${usuario.email}', '${usuario.rol}')">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="btn btn-sm btn-danger" onclick="eliminarUsuario(${usuario.id_usuario})">
+            <i class="bi bi-trash"></i>
+          </button>
+        </td>
+      `;
+      tbody.appendChild(tr);
+    });
+  } catch (err) {
+    console.error('Error al cargar usuarios:', err);
+    alert('Error al cargar usuarios');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', () => cargarUsuarios());
+</script>
+<script>
+    function abrirModalEditar(id, nombre, apep, apem, email, rol) {
+      document.getElementById('editar-id-usuario').value = id;
+      document.getElementById('editar-nom-usuario').value = nombre;
+      document.getElementById('editar-apep-usuario').value = apep;
+      document.getElementById('editar-apem-usuario').value = apem;
+      document.getElementById('editar-email').value = email;
+      document.getElementById('editar-rol').value = rol;
+      document.getElementById('editar-pass').value = '';
+
+      const modal = new bootstrap.Modal(document.getElementById('modalEditarUsuario'));
+      modal.show();
+    }
+
+    document.getElementById('form-editar-usuario').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id_usuario = document.getElementById('editar-id-usuario').value;
+      const nom_usuario = document.getElementById('editar-nom-usuario').value;
+      const apep_usuario = document.getElementById('editar-apep-usuario').value;
+      const apem_usuario = document.getElementById('editar-apem-usuario').value;
+      const email = document.getElementById('editar-email').value;
+      const rol = document.getElementById('editar-rol').value;
+      const pass = document.getElementById('editar-pass').value;
+
+      try {
+        const res = await fetch('/usuario/modificar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_usuario, nom_usuario, apep_usuario, apem_usuario, email, rol, password: pass })
+        });
+        const data = await res.json();
+
+        if (data.success) {
+          alert('Usuario actualizado correctamente');
+          cargarUsuarios();
+          bootstrap.Modal.getInstance(document.getElementById('modalEditarUsuario')).hide();
+        } else {
+          alert(data.message || 'Error al actualizar usuario');
+        }
+      } catch (err) {
+        console.error('Error al actualizar usuario:', err);
+        alert('Error al actualizar usuario');
+      }
+    });
+</script>
+<script>
+    async function eliminarUsuario(id_usuario) {
+      if (!confirm('¿Deseas eliminar este usuario?')) return;
+
+      try {
+        const res = await fetch('/eliminar-usuario', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ id_usuario })
+        });
+        const data = await res.json();
+
+        if (data.mensaje) {
+          alert(data.mensaje);
+          cargarUsuarios();
+        } else {
+          alert('Error al eliminar usuario');
+        }
+      } catch (err) {
+        console.error('Error al eliminar usuario:', err);
+        alert('Error al eliminar usuario');
+      }
+    }
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const formRegistro = document.getElementById('formRegistro');
+  const mensajeRegistro = document.getElementById('mensajeRegistro');
+
+  if (!formRegistro) return; // Seguridad por si no existe el formulario
+
+  formRegistro.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const data = {
+      nom_usuario: formRegistro.nom_usuario.value,
+      apep_usuario: formRegistro.apep_usuario.value,
+      apem_usuario: formRegistro.apem_usuario.value,
+      email: formRegistro.email.value,
+      pass: formRegistro.pass.value,  // ⚠ Asegúrate que el backend espera "pass"
+      rol: formRegistro.rol.value
+    };
+
+    try {
+      const res = await fetch('/register', { // ⚠ Ajusta la URL según tu backend
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+
+      const result = await res.json();
+
+      if (result.success) {
+        // Mostrar mensaje de éxito
+        alert(result.message || 'Usuario registrado correctamente');
+
+        formRegistro.reset();
+
+        // Cerrar modal automáticamente
+        const modalRegistroEl = document.getElementById('modalRegistro');
+        const modal = bootstrap.Modal.getInstance(modalRegistroEl) || new bootstrap.Modal(modalRegistroEl);
+        modal.hide();
+
+        // Refrescar la página
+        location.reload();
+      } else {
+        mensajeRegistro.style.color = 'red';
+        mensajeRegistro.textContent = result.message || 'Error al registrar usuario';
+      }
+    } catch (err) {
+      console.error('Error al registrar usuario:', err);
+      mensajeRegistro.style.color = 'red';
+      mensajeRegistro.textContent = 'Error al registrar usuario';
+    }
+  });
+});
+</script>
+
+<script>
+  document.querySelectorAll('[data-categoria]').forEach(item => {
+    item.addEventListener('click', e => {
+      // Evitar que funcione dentro de formularios o modales
+      if (item.closest('form') || item.closest('.modal')) return;
+
+      e.preventDefault();
+      const categoria = item.getAttribute('data-categoria');
+      const url = new URL(window.location.origin + '/productos');
+
+      if (categoria.toLowerCase() !== "todos") {
+        url.searchParams.set('categoria', categoria);
+      }
+      // Si es "todos", no agregamos parámetro, va a /productos sin filtro
+
+      window.location.href = url.toString();
+    });
+  });
+</script>
+
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Dalmacia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/styles.css">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+<body>
+
+<!-- Navbar superior-->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-2">
+  <a class="navbar-brand fw-bold" href="/">Dalmacia</a>
+
+  <form id="form-busqueda" class="d-flex mx-3 flex-grow-1" role="search" method="GET" action="/catalogo">
+    <input id="input-busqueda" name="q" class="form-control me-2" type="search" placeholder="Buscar productos...">
+    <button class="btn btn-outline-light" type="submit"><i class="bi bi-search"></i></button>
+  </form>
+
+  <div class="collapse navbar-collapse">
+    <ul class="navbar-nav ms-auto">
+      <!-- Aquí se insertará el nombre del usuario después de iniciar sesión -->
+      <div id="user-info"></div>
+    </ul>
+  </div>
+</nav>
+
+<!-- Navbar inferior -->
+<nav class="bg-light border-top border-bottom py-2">
+  <div class="container d-flex gap-4">
+    <a href="/" class="text-dark text-decoration-none fw-bold border-bottom border-3 border-primary">Home</a>
+    <a href="/catalogo" class="text-dark text-decoration-none">Catalogo</a>
+    <div class="dropdown">
+      <a class="text-dark text-decoration-none dropdown-toggle" href="#" role="button" id="dropdownCategorias" data-bs-toggle="dropdown" aria-expanded="false">
+        Categorías
+      </a>
+      <ul class="dropdown-menu" aria-labelledby="dropdownCategorias">
+        <li><a class="dropdown-item" href="#" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Construccion">Construcción</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Jardineria">Jardinería</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Fontaneria">Fontanería</a></li>
+        <li><a class="dropdown-item" href="#" data-categoria="Seguridad">Seguridad</a></li>
+      </ul>
+    </div>
+    <a href="#" class="text-dark text-decoration-none">Sobre Nosotros</a>
+  </div>
+</nav>
+
+<!-- Carrusel -->
+<div id="miCarrusel" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner" style="height: 300px;">
+    <div class="carousel-item active">
+      <img src="/imagenes/slide1.jpg" class="d-block w-100 h-100" style="object-fit: cover;" alt="Slide 1">
+    </div>
+    <div class="carousel-item">
+      <img src="/imagenes/slide2.png" class="d-block w-100 h-100" style="object-fit: cover;" alt="Slide 2">
+    </div>
+    <div class="carousel-item">
+      <img src="/imagenes/slide3.jpg" class="d-block w-100 h-100" style="object-fit: cover;" alt="Slide 3">
+    </div>
+  </div>
+
+  <!-- Controles opcionales -->
+  <button class="carousel-control-prev" type="button" data-bs-target="#miCarrusel" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#miCarrusel" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
+<!-- Productos destacados-->
+<div class="container-fluid pt-5 pb-3">
+  <h2 class="section-title position-relative text-uppercase mx-xl-5 mb-4">
+    <span>Productos Destacados</span>
+  </h2>
+
+  <div id="productos-container" class="row px-xl-5">
+    <!-- Productos generados dinámicamente aquí -->
+  </div>
+</div>
+
+<!-- Horarios -->
+<div class="container py-5">
+  <div class="row align-items-center">
+    <div class="col-md-6">
+      <section class="section section--text-centered text-md-start text-center">
+        <h2 class="heading h1">Horarios de Atención</h2>
+        <p>
+          Lunes a Viernes: 08:00 - 18:00 hrs<br>
+          Sábados: 09:30 - 16:00 hrs<br>
+          <h6>Dirección:</h6>
+          Av. Tte. Cruz 1393, 9110614 Santiago, Cerro Navia, Región Metropolitana
+        </p>
+      </section>
+    </div>
+
+    <div class="col-md-6 text-center">
+      <img src="/imagenes/local" alt="Imagen del local" class="img-fluid rounded">
+    </div>
+
+  </div>
+</div>
+
+<!-- Footer -->
+<footer class="bg-dark text-light pt-4 pb-3">
+  <div class="container">
+    <div class="row">
+      <div class="col-md-4 mb-3">
+        <h5>Dalmacia</h5>
+      </div>
+      <div class="col-md-2 mb-3">
+        <h6>Enlaces</h6>
+        <ul class="list-unstyled">
+          <li><a href="/" class="text-light text-decoration-none">Home</a></li>
+          <li><a href="/catalogo" class="text-light text-decoration-none">Catalogo</a></li>
+          <li><a href="#" class="text-light text-decoration-none">Sobre nosotros</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-3">
+        <h6>Categorias</h6>
+        <ul class="list-unstyled">
+          <li><a class="dropdown-item" href="#" data-categoria="Herramienta Manual">Herramientas Manuales</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Herramienta Electrica">Herramientas Eléctricas</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Construccion">Construcción</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Jardineria">Jardinería</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Fontaneria">Fontanería</a></li>
+          <li><a class="dropdown-item" href="#" data-categoria="Seguridad">Seguridad</a></li>
+        </ul>
+      </div>
+      <div class="col-md-3 mb-3">
+        <h6>Contactanos</h6>
+        <div>
+          <a href="#" class="text-light me-3"><i class="bi bi-facebook"></i></a>
+          <a href="#" class="text-light me-3"><i class="bi bi-twitter"></i></a>
+          <a href="#" class="text-light"><i class="bi bi-instagram"></i></a>
+        </div>
+      </div>
+    </div>
+
+    <hr class="bg-light">
+    <div class="text-end small">
+      &copy; 2025 Dalmacia. Todos los derechos reservados.
+    </div>
+  </div>
+</footer>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function getCookie(name) {
+  const cookies = document.cookie.split(';');
+  for (const cookie of cookies) {
+    const [key, value] = cookie.trim().split('=');
+    if (key === name) return decodeURIComponent(value);
+  }
+  return null;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  const usuario = getCookie('nombre_usuario');
+  const userInfo = document.getElementById('user-info');
+
+  if (usuario) {
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center gap-3 w-100">
+        <div class="d-flex align-items-center gap-2">
+          <span class="text-white">Hola, ${usuario}</span>
+          <a class="btn btn-sm btn-outline-light" href="/logout">Salir</a>
+        </div>
+        <div class="position-relative ms-auto">
+          <a id="carrito-btn" class="text-white text-decoration-none d-flex align-items-center" href="#">
+            <i class="bi bi-cart me-1"></i> Carrito
+          </a>
+          <span class="cart-badge d-none">0</span>
+        </div>
+      </div>
+    `;
+
+    const carritoBtn = document.getElementById('carrito-btn');
+    const badge = document.querySelector('.cart-badge');
+
+    const popover = new bootstrap.Popover(carritoBtn, {
+      html: true,
+      content: '<div class="text-center text-muted py-2">Cargando carrito...</div>',
+      placement: 'bottom',
+      sanitize: false,
+      trigger: 'manual'
+    });
+
+    carritoBtn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      await cargarCarrito(true);
+    });
+
+    async function cargarCarrito(mostrar = false) {
+      try {
+        const response = await fetch('/carrito', { credentials: 'include' });
+        if (response.status === 401) return window.location.href = '/login';
+
+        const data = await response.json();
+        const productos = data.carrito || [];
+
+        if (productos.length === 0) {
+          actualizarPopover('<div class="text-center text-muted py-2">Tu carrito está vacío</div>');
+          badge.classList.add('d-none');
+          if (mostrar) popover.show();
+          return;
+        }
+
+        let contenido = `<div class="list-group small" style="max-width:300px;">`;
+        let total = 0;
+
+        productos.forEach(item => {
+          total += Number(item.subtotal);
+          contenido += `
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div class="text-truncate" style="max-width:150px;">
+                ${item.nom_producto}<br>
+                <small class="text-muted">x${item.cantidad}</small>
+                <div class="mt-1">
+                  <button class="btn btn-sm btn-outline-secondary btn-minus" data-id="${item.id_producto}" data-cantidad="${item.cantidad}">-</button>
+                  <button class="btn btn-sm btn-outline-secondary btn-plus" data-id="${item.id_producto}" data-cantidad="${item.cantidad}">+</button>
+                </div>
+              </div>
+              <span class="fw-semibold">${Number(item.subtotal).toLocaleString("es-CL", { style: "currency", currency: "CLP" })}</span>
+            </div>
+          `;
+        });
+
+        contenido += `
+          <div class="list-group-item text-end fw-bold border-top">
+            Total: ${total.toLocaleString("es-CL", { style: "currency", currency: "CLP" })}
+          </div>
+          <div class="text-center mt-2">
+            <button id="vaciar-carrito" class="btn btn-sm btn-danger mb-1">Vaciar carrito</button>
+            <a href="/checkout" class="btn btn-sm btn-success">Ir a pagar</a>
+          </div>
+        </div>`;
+
+        actualizarPopover(contenido);
+
+        badge.textContent = productos.reduce((sum, p) => sum + Number(p.cantidad), 0);
+        badge.classList.remove('d-none');
+
+        if (mostrar) popover.show();
+
+        // Eventos aumentar/disminuir productos
+        document.querySelectorAll('.btn-plus').forEach(btn => {
+          btn.addEventListener('click', () => modificarCantidad(btn.dataset.id, 1));
+        });
+        document.querySelectorAll('.btn-minus').forEach(btn => {
+          btn.addEventListener('click', () => modificarCantidad(btn.dataset.id, -1));
+        });
+
+        // Evento vaciar carrito
+        const vaciarBtn = document.getElementById('vaciar-carrito');
+        if (vaciarBtn) vaciarBtn.addEventListener('click', vaciarCarrito);
+
+      } catch (error) {
+        console.error('Error al cargar el carrito:', error);
+        actualizarPopover('<div class="text-danger text-center py-2">Error al cargar el carrito.</div>');
+        if (mostrar) popover.show();
+      }
+    }
+
+    function actualizarPopover(contenido) {
+      const instancia = bootstrap.Popover.getInstance(carritoBtn);
+      if (!instancia) return;
+
+      if (typeof instancia.setContent === 'function') {
+        instancia.setContent({ '.popover-body': contenido });
+      } else {
+        const tip = instancia.getTipElement();
+        if (tip && tip.querySelector('.popover-body')) {
+          tip.querySelector('.popover-body').innerHTML = contenido;
+        }
+      }
+    }
+
+    async function modificarCantidad(id_producto, cantidad) {
+      try {
+        const res = await fetch('/carrito/modificar', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          credentials: 'include',
+          body: JSON.stringify({ id_producto, cantidad })
+        });
+        const data = await res.json();
+        if (!data.success) console.error(data.message);
+        cargarCarrito(true);
+      } catch (error) {
+        console.error('Error al modificar cantidad:', error);
+      }
+    }
+
+    async function vaciarCarrito() {
+      try {
+        const res = await fetch('/carrito/vaciar', { method: 'POST', credentials: 'include' });
+        const data = await res.json();
+        if (!data.success) console.error(data.message);
+        cargarCarrito(true);
+      } catch (error) {
+        console.error('Error al vaciar carrito:', error);
+      }
+    }
+
+    window.cargarCarrito = () => cargarCarrito(false);
+    cargarCarrito(false);
+
+  } else {
+    userInfo.innerHTML = `
+      <div class="d-flex justify-content-between align-items-center gap-3 w-100">
+        <div class="d-flex align-items-center gap-2">
+          <a class="text-white text-decoration-none d-flex align-items-center" href="/login">
+            <i class="bi bi-person me-1"></i> Iniciar sesión
+          </a>
+        </div>
+        <div class="position-relative ms-auto">
+          <a class="text-white text-decoration-none d-flex align-items-center" href="/login">
+            <i class="bi bi-cart me-1"></i> Carrito
+          </a>
+          <span class="cart-badge d-none">0</span>
+        </div>
+      </div>
+    `;
+  }
+});
+</script>
+
+<script>
+    // Obtener productos destacados de manera dinámica
+    fetch('http://localhost:8080/producto') 
+      .then(response => {
+        if (!response.ok) {
+          throw new Error(`Error HTTP: ${response.status}`);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const productosContainer = document.getElementById('productos-container');
+        if (!productosContainer) {
+          console.error('No se encontró el contenedor productos-container');
+          return;
+        }
+
+        // Limitar a 3 productos destacados
+        data.slice(0, 3).forEach(producto => {
+          //Precio en pesos chilenos (CLP)
+          const precioCLP = producto.precio.toLocaleString("es-CL", { 
+            style: "currency", 
+            currency: "CLP" 
+          });
+
+          const productCard = document.createElement('div');
+          productCard.classList.add('col-md-4');
+
+          productCard.innerHTML = `
+            <div class="card mb-4">
+              <img class="img-fluid w-100" src="${producto.imagen}" alt="${producto.nom_producto}"
+                onerror="this.onerror=null; this.src='/imagenes/default.jpg';">
+              <div class="card-body">
+                <h5 class="card-title">${producto.nom_producto}</h5>
+                <p class="card-text">${producto.descripcion}</p>
+                <p><strong>Precio:</strong> ${precioCLP}</p>
+
+                <a href="/detalleproducto?id=${producto.id_producto}" class="btn btn-primary">Ver más</a>
+              </div>
+            </div>
+          `;
+
+          productosContainer.appendChild(productCard);
+        });
+      })
+      .catch(error => {
+        console.error('Error al obtener los productos:', error);
+      });
+</script>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const params = new URLSearchParams(window.location.search);
+    const terminoBusqueda = params.get("q");
+
+    if (terminoBusqueda) {
+      const inputBusqueda = document.getElementById("input-busqueda");
+      if (inputBusqueda) inputBusqueda.value = terminoBusqueda;
+
+      const termino = terminoBusqueda.toLowerCase();
+
+      // Filtrar productos cargados desde el servidor
+      productosFiltrados = productos.filter(p =>
+        p.nom_producto.toLowerCase().includes(termino) ||
+        p.descripcion.toLowerCase().includes(termino)
+      );
+
+      mostrarProductos(productosFiltrados);
+    }
+  });
+</script>
+
+<script>
+// Seleccionamos todos los items del dropdown
+document.querySelectorAll('.dropdown-item[data-categoria]').forEach(item => {
+  item.addEventListener('click', (e) => {
+    e.preventDefault(); // Evitar navegación normal
+
+    const categoria = item.getAttribute('data-categoria');
+
+    // Construimos la URL del catálogo con el parámetro de categoría
+    const url = new URL(window.location.origin + '/catalogo');
+    url.searchParams.set('categoria', categoria);
+
+    // Redirigimos a esa URL
+    window.location.href = url.toString();
+  });
+});
+</script>
+
+</body>
+</html>

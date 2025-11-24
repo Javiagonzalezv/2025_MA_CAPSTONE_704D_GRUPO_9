@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Checkout</title>
+    <link rel="stylesheet" href="/styles.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+   <nav class="navbar navbar-dark bg-dark">
+    <div class="container d-flex justify-content-between">
+      <a class="navbar-brand" href="/">Dalmacia</a>
+      <div id="user-info"></div>
+    </div>
+  </nav>
+
+
+  <!-- CONTENIDO -->
+  <div class="container py-4">
+
+    <h2 class="mb-4">Confirmación de compra</h2>
+
+    <div id="checkout-content">
+      <p>Cargando tu carrito...</p>
+    </div>
+
+    <div class="mt-4">
+      <button id="btn-cancelar" class="btn btn-secondary">Cancelar</button>
+      <button id="btn-comprar" class="btn btn-success">Comprar</button>
+    </div>
+
+  </div>
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+
+  <script>
+  function getCookie(name) {
+    const cookies = document.cookie.split(';');
+    for (const cookie of cookies) {
+      const [key, value] = cookie.trim().split('=');
+      if (key === name) return decodeURIComponent(value);
+    }
+    return null;
+  }
+
+  document.addEventListener('DOMContentLoaded', () => {
+    const usuario = getCookie('nombre_usuario');
+    const userInfo = document.getElementById('user-info');
+
+    if (usuario) {
+      userInfo.innerHTML = `
+        <div class="d-flex justify-content-between align-items-center gap-3 w-100">
+          <div class="d-flex align-items-center gap-2">
+            <span class="text-white">Hola, ${usuario}</span>
+            <a class="btn btn-sm btn-outline-light" href="/logout">Salir</a>
+          </div>
+          
+        </div>
+      `;
+    } else {
+      userInfo.innerHTML = `
+        <a href="/login" class="text-white text-decoration-none">Iniciar sesión</a>
+      `;
+    }
+  });
+  </script>
+
+  <script>
+    async function cargarCheckout() {
+      const res = await fetch('/carrito', { credentials: 'include' });
+      
+      if (res.status === 401) {
+        window.location.href = '/login';
+        return;
+      }
+
+      const data = await res.json();
+      const productos = data.carrito || [];
+
+      if (productos.length === 0) {
+        document.getElementById('checkout-content').innerHTML = `
+          <p class="text-muted">Tu carrito está vacío.</p>
+        `;
+        document.getElementById('btn-comprar').disabled = true;
+        return;
+      }
+
+      let html = `
+        <ul class="list-group mb-3">
+      `;
+
+      let total = 0;
+      productos.forEach(p => {
+        total += Number(p.subtotal);
+
+        html += `
+          <li class="list-group-item d-flex justify-content-between">
+            <div>
+              ${p.nom_producto}
+              <small class="text-muted">x${p.cantidad}</small>
+            </div>
+            <strong>${Number(p.subtotal).toLocaleString("es-CL",{style:"currency",currency:"CLP"})}</strong>
+          </li>
+        `;
+      });
+
+      html += `
+        <li class="list-group-item d-flex justify-content-between fw-bold">
+          Total
+          <span>${total.toLocaleString("es-CL",{style:"currency",currency:"CLP"})}</span>
+        </li>
+      </ul>
+      `;
+
+      document.getElementById('checkout-content').innerHTML = html;
+    }
+
+
+    // CANCELAR → volver al inicio y vaciar carrito
+    document.getElementById('btn-cancelar').addEventListener('click', async () => {
+      await fetch('/carrito/vaciar', { method: 'POST', credentials: 'include' });
+      window.location.href = '/';
+    });
+
+
+    // COMPRAR → Paso siguiente (iniciar transacción Webpay)
+    document.getElementById('btn-comprar').addEventListener('click', async () => {
+      const res = await fetch('/webpay/init', {
+        method: 'POST',
+        credentials: 'include'
+      });
+
+      const data = await res.json();
+
+      if (!data.url) {
+        alert("Error iniciando pago");
+        return;
+      }
+
+      // Redirigir a Webpay
+      window.location.href = data.url;
+    });
+
+
+    // Cargar todo al inicio
+    cargarCheckout();
+  </script>
+
+</body>
+</html>
